@@ -76,3 +76,67 @@ def test_non_json_content_type(client):
     application.add_route('/route', Resource())
     resp = client.get('/route')
     assert resp.body == '<html></html>'
+
+
+def test_before_as_parameter(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.set_headers(req.headers)
+
+    def patch_kwargs(kwargs):
+        kwargs['headers']['X-Patched'] = 'Yep'
+
+    application.add_route('/route', Resource())
+    client = client(before=patch_kwargs)
+    resp = client.get('/route')
+    assert resp.headers['X-Patched'] == 'Yep'
+
+
+def test_before_as_decorator(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.set_headers(req.headers)
+
+    @client.before
+    def patch_kwargs(kwargs):
+        kwargs['headers']['X-Patched'] = 'Yep'
+
+    application.add_route('/route', Resource())
+    resp = client.get('/route')
+    assert resp.headers['X-Patched'] == 'Yep'
+
+
+def test_after_as_parameter(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.body = '{"foo": "bar"}'
+
+    def patch_response(resp):
+        resp.my_prop = 'ok'
+
+    application.add_route('/route', Resource())
+    client = client(after=patch_response)
+    resp = client.get('/route')
+    assert resp.my_prop == 'ok'
+
+
+def test_after_as_decorator(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.body = '{"foo": "bar"}'
+
+    @client.after
+    def patch_response(resp):
+        resp.my_prop = 'ok'
+
+    application.add_route('/route', Resource())
+    resp = client.get('/route')
+    assert resp.my_prop == 'ok'

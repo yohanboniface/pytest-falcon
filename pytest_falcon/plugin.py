@@ -8,10 +8,18 @@ from falcon.testing.helpers import create_environ
 
 class Client(object):
 
-    def __init__(self, app):
+    def __init__(self, app, **kwargs):
         self.app = app
+        self._before = kwargs.get('before')
+        self._after = kwargs.get('after')
+
+    def __call__(self, app=None, **kwargs):
+        return Client(app or self.app, **kwargs)
 
     def fake_request(self, path, **kwargs):
+        kwargs.setdefault('headers', {})
+        if self._before:
+            self._before(kwargs)
         parsed = parse.urlparse(path)
         path = parsed.path
         if parsed.query:
@@ -23,6 +31,8 @@ class Client(object):
         resp.body = body[0].decode() if body else ''
         if 'application/json' in resp.headers.get('Content-Type', ''):
             resp.json = json.loads(resp.body)
+        if self._after:
+            self._after(resp)
         return resp
 
     def get(self, path, **kwargs):
@@ -36,6 +46,12 @@ class Client(object):
 
     def put(self, path, body, **kwargs):
         return self.fake_request(path, method='PUT', body=body, **kwargs)
+
+    def before(self, func):
+        self._before = func
+
+    def after(self, func):
+        self._after = func
 
 
 @pytest.fixture
