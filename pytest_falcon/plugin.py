@@ -47,6 +47,9 @@ class Client(object):
     def put(self, path, body, **kwargs):
         return self.fake_request(path, method='PUT', body=body, **kwargs)
 
+    def patch(self, path, body, **kwargs):
+        return self.fake_request(path, method='PATCH', body=body, **kwargs)
+
     def before(self, func):
         self._before = func
 

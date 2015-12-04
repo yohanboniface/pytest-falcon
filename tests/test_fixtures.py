@@ -53,6 +53,20 @@ def test_put(client):
     assert resp.json['myparam'] == 'myvalue'
 
 
+def test_patch(client):
+
+    class Resource:
+
+        def on_patch(self, req, resp, **kwargs):
+            resp.body = req.stream.read().decode()
+
+    application.add_route('/route', Resource())
+
+    resp = client.patch('/route', '{"myparam": "myvalue"}')
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json['myparam'] == 'myvalue'
+
+
 def test_custom_header(client):
 
     class Resource:
