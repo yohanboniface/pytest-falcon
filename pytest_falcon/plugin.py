@@ -40,9 +40,11 @@ class Client(object):
 
     def post(self, path, data, **kwargs):
         kwargs.setdefault('headers', {})
-        kwargs['headers']['Content-Type'] = 'application/x-www-form-urlencoded'
-        body = parse.urlencode(data)
-        return self.fake_request(path, method='POST', body=body, **kwargs)
+        headers = kwargs['headers']
+        if 'Content-Type' not in headers:
+            headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            data = parse.urlencode(data)
+        return self.fake_request(path, method='POST', body=data, **kwargs)
 
     def put(self, path, body, **kwargs):
         return self.fake_request(path, method='PUT', body=body, **kwargs)
