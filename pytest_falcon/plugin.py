@@ -52,6 +52,9 @@ class Client(object):
     def patch(self, path, body, **kwargs):
         return self.fake_request(path, method='PATCH', body=body, **kwargs)
 
+    def delete(self, path, **kwargs):
+        return self.fake_request(path, method='DELETE', **kwargs)
+
     def before(self, func):
         self._before = func
 
