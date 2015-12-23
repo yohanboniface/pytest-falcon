@@ -1,9 +1,14 @@
 import json
-from urllib import parse
 
 import pytest
-from falcon.testing.srmock import StartResponseMock
 from falcon.testing.helpers import create_environ
+from falcon.testing.srmock import StartResponseMock
+
+try:
+    from urllib.parse import urlparse, urlencode
+except ImportError:
+    from urlparse import urlparse
+    from urllib import urlencode
 
 
 class Client(object):
@@ -20,7 +25,7 @@ class Client(object):
         kwargs.setdefault('headers', {})
         if self._before:
             self._before(kwargs)
-        parsed = parse.urlparse(path)
+        parsed = urlparse(path)
         path = parsed.path
         if parsed.query:
             kwargs['query_string'] = parsed.query
@@ -43,7 +48,7 @@ class Client(object):
         headers = kwargs['headers']
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/x-www-form-urlencoded'
-            data = parse.urlencode(data)
+            data = urlencode(data)
         return self.fake_request(path, method='POST', body=data, **kwargs)
 
     def put(self, path, body, **kwargs):
