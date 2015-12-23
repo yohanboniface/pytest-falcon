@@ -67,6 +67,19 @@ def test_patch(client):
     assert resp.json['myparam'] == 'myvalue'
 
 
+def test_delete(client):
+
+    class Resource:
+
+        def on_delete(self, req, resp, **kwargs):
+            resp.status = falcon.HTTP_204
+
+    application.add_route('/route', Resource())
+
+    resp = client.delete('/route')
+    assert resp.status == falcon.HTTP_204
+
+
 def test_custom_header(client):
 
     class Resource:

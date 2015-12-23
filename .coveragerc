@@ -1,0 +1,3 @@
+[run]
+omit =
+    pytest_falcon/__init__.py
