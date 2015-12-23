@@ -2,15 +2,11 @@
 
 Pytest helpers for the Falcon framework.
 
-**WARNING WORK IN PROGRESS**
-
 
 ## Install
 
-No pypi release yet.
-
 ```
-pip install git+http://github.com/yohanboniface/pytest-falcon
+pip install pytest-falcon
 ```
 
 
