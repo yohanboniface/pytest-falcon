@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/yohanboniface/pytest-falcon.svg?branch=master)](https://travis-ci.org/yohanboniface/pytest-falcon)
+
 # Pytest-Falcon
 
 Pytest helpers for the Falcon framework.
