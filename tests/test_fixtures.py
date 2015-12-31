@@ -25,6 +25,20 @@ def test_get(client):
     assert resp.json['foo'] == 'bar'
 
 
+def test_empty_response_with_json_content_type_should_not_fail(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.set_header('Content-Type', 'application/json')
+
+    application.add_route('/route', Resource())
+
+    resp = client.get('/route')
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json == {}
+
+
 def test_post(client):
 
     class Resource:

@@ -47,7 +47,7 @@ class Client(object):
         resp.status_code = int(resp.status.split(' ')[0])
         resp.body = body[0].decode() if body else ''
         if 'application/json' in resp.headers.get('Content-Type', ''):
-            resp.json = json.loads(resp.body)
+            resp.json = json.loads(resp.body) if resp.body else {}
         if self._after:
             self._after(resp)
         return resp
