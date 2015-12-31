@@ -83,6 +83,21 @@ def test_put(client):
     assert resp.json['myparam'] == 'myvalue'
 
 
+def test_put_with_json_content_type_shoud_reencode_dict(client):
+
+    class Resource:
+
+        def on_put(self, req, resp, **kwargs):
+            resp.data = req.stream.read()
+
+    application.add_route('/route', Resource())
+
+    headers = {'Content-Type': 'application/json'}
+    resp = client.put('/route', {"myparam": "myvalue"}, headers=headers)
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json['myparam'] == 'myvalue'
+
+
 def test_patch(client):
 
     class Resource:

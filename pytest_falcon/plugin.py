@@ -21,6 +21,17 @@ class Client(object):
     def __call__(self, app=None, **kwargs):
         return Client(app or self.app, **kwargs)
 
+    def encode_body(self, kwargs):
+        body = kwargs.get('body')
+        headers = kwargs.get('headers')
+        content_type = headers.get('Content-Type')
+        if not body or not content_type or isinstance(body, str):
+            return
+        if 'application/x-www-form-urlencoded' in content_type:
+            kwargs['body'] = urlencode(body)
+        elif 'application/json' in headers['Content-Type']:
+            kwargs['body'] = json.dumps(body)
+
     def fake_request(self, path, **kwargs):
         kwargs.setdefault('headers', {})
         if self._before:
@@ -29,6 +40,7 @@ class Client(object):
         path = parsed.path
         if parsed.query:
             kwargs['query_string'] = parsed.query
+        self.encode_body(kwargs)
         resp = StartResponseMock()
         body = self.app(create_environ(path, **kwargs), resp)
         resp.headers = resp.headers_dict
@@ -48,10 +60,6 @@ class Client(object):
         headers = kwargs['headers']
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/x-www-form-urlencoded'
-            data = urlencode(data)
-        elif 'application/json' in headers['Content-Type']\
-                and not isinstance(data, str):
-            data = json.dumps(data)
         return self.fake_request(path, method='POST', body=data, **kwargs)
 
     def put(self, path, body, **kwargs):
