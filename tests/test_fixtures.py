@@ -39,6 +39,36 @@ def test_post(client):
     assert resp.json['myparam'] == 'myvalue'
 
 
+def test_post_with_content_type_shoud_not_reencode(client):
+
+    class Resource:
+
+        def on_post(self, req, resp, **kwargs):
+            resp.data = req.stream.read()
+
+    application.add_route('/route', Resource())
+
+    headers = {'Content-Type': 'application/json'}
+    resp = client.post('/route', '{"myparam": "myvalue"}', headers=headers)
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json['myparam'] == 'myvalue'
+
+
+def test_post_with_json_content_type_shoud_reencode_dict(client):
+
+    class Resource:
+
+        def on_post(self, req, resp, **kwargs):
+            resp.data = req.stream.read()
+
+    application.add_route('/route', Resource())
+
+    headers = {'Content-Type': 'application/json'}
+    resp = client.post('/route', {"myparam": "myvalue"}, headers=headers)
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json['myparam'] == 'myvalue'
+
+
 def test_put(client):
 
     class Resource:

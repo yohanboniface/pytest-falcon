@@ -49,6 +49,9 @@ class Client(object):
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/x-www-form-urlencoded'
             data = urlencode(data)
+        elif 'application/json' in headers['Content-Type']\
+                and not isinstance(data, str):
+            data = json.dumps(data)
         return self.fake_request(path, method='POST', body=data, **kwargs)
 
     def put(self, path, body, **kwargs):
