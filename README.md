@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/yohanboniface/pytest-falcon.svg?branch=master)](https://travis-ci.org/yohanboniface/pytest-falcon)
+[![Build Status](https://travis-ci.org/yohanboniface/pytest-falcon.svg?branch=master)](https://travis-ci.org/yohanboniface/pytest-falcon) [![Pypi version](https://img.shields.io/pypi/v/pytest-falcon.svg)](https://pypi.python.org/pypi/pytest-falcon)
 
 # Pytest-Falcon
 
