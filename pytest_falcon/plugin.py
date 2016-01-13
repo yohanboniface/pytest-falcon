@@ -40,6 +40,8 @@ class Client(object):
         path = parsed.path
         if parsed.query:
             kwargs['query_string'] = parsed.query
+        if isinstance(kwargs.get('query_string', None), dict):
+            kwargs['query_string'] = urlencode(kwargs['query_string'])
         self.encode_body(kwargs)
         resp = StartResponseMock()
         body = self.app(create_environ(path, **kwargs), resp)

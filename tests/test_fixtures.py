@@ -226,3 +226,39 @@ def test_after_as_decorator(client):
     application.add_route('/route', Resource())
     resp = client.get('/route')
     assert resp.my_prop == 'ok'
+
+
+def test_query_string_can_be_passed_as_string(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.body = json.dumps(req.params)
+
+    application.add_route('/route', Resource())
+    resp = client.get('/route', query_string='myparam=myvalue')
+    assert resp.json['myparam'] == 'myvalue'
+
+
+def test_query_string_can_be_passed_as_dict(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.body = json.dumps(req.params)
+
+    application.add_route('/route', Resource())
+    resp = client.get('/route', query_string={'myparam': 'myvalue'})
+    assert resp.json['myparam'] == 'myvalue'
+
+
+def test_query_string_can_be_passed_in_the_url(client):
+
+    class Resource:
+
+        def on_get(self, req, resp, **kwargs):
+            resp.body = json.dumps(req.params)
+
+    application.add_route('/route', Resource())
+    resp = client.get('/route?myparam=myvalue')
+    assert resp.json['myparam'] == 'myvalue'
