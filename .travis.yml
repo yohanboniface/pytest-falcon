@@ -1,22 +1,16 @@
 sudo: false
-
 language: python
-
 python:
 - '2.7'
 - '3.4'
 - '3.5'
-
 cache:
   directories:
-  - $HOME/.cache/pip
-
+  - "$HOME/.cache/pip"
 install:
 - pip install -r requirements.txt
 - python setup.py develop
-
 script: py.test
-
 notifications:
   irc:
     channels:
@@ -24,11 +18,11 @@ notifications:
     on_success: change
     on_failure: always
   email: false
-
 deploy:
   provider: pypi
   user: ybon
   password:
-    secure: VktWHqVC+63JpFSJUGvuyQjVIPb3ocaRAejYSAxwwIkPKdMiFXd0Wv6IIq7PMqJzkMWtHPU/nSJMfzuoTA5Dxl556/jt1gFTD0NfKRsxlThcosZU/8kJ7SHRkjKPWwATySCAU8owHtuXbcmRCpB/9sImE3AKQpHh/J+BvByB1J8=
+    secure: hI3aBXJNmvy96wvHXW1oDzp053s6nDHmhFSUMbLuxdcZDPbbwVkThn8SQXNdVi3d+qb0LFwYFKW7wyPH0UKBWZ9xGITIUy9dMh+9YOyb6uygQJ4Zylze7KFjCNI/iIoEY8o8cprCSEOLMyJtazndNwH3F1pEbOC9mM/9iZXzf+3hX4UfSGNyvVTA9HzcC+jViV0fr4G1wANoIeXuZ/KaOpejGWuHUGRhouDRlu/ouiCuhr6JvExB31bNth6FVaCOURqy+Sms8GAKCYeid3Td88wXIyapgRsR3TdkcYiKDpIVY7bkqjlUEFh6fK1ByDn112kad/Qmv8zQNEsuqvv41j5L+CciEN5hs2gW3OwhyWSbNpd6QmVeFOS76l6NCS8hkUrYPeJ+s4ELrFj81MPorIIQgvU7zj86HOq8ENpdjdp2Uyed9E2JBbdUYCP7HJODr/9uU/YJmxVJgSh8RqNoF5IwVkmnY7EC0saigz1j+yGEuxixi9byY5/BNRfteQj9+wd/xqpR+wneUC9JIfR4hBISH6w4VzZvY4vOLR1Xv0gSBcTwgsqGU0OJEric/iP2wnWPVeyS+hPWybCGKZufae+jPG0gVx3F1XKaDOp4YSQF1zG1lR0G/OBMIVH5us+f1InhdPzNZCyiwX2mwHfe8KgadeYb4eaACwuyIoCDOk4=
   on:
     tags: true
+    repo: yohanboniface/pytest-falcon
