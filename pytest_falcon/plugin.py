@@ -132,12 +132,15 @@ class Client(object):
         body = self.app(create_environ(path, **kwargs), resp)
         resp.headers = resp.headers_dict
         resp.status_code = int(resp.status.split(' ')[0])
-        resp.body = body[0] if body else b''
+        try:
+            resp.body = body[0] if body else ''
+        except TypeError:
+            resp.body = b''.join(list(body))
         try:
             # …to be smart and provide the response as str if it let iself
             # decode.
             resp.body = resp.body.decode()
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, AttributeError):
             # But do not insist.
             pass
         if 'application/json' in resp.headers.get('Content-Type', ''):

@@ -1,3 +1,4 @@
+import os
 import json
 
 import falcon
@@ -23,6 +24,26 @@ def test_get(client):
     resp = client.get('/route')
     assert resp.status == falcon.HTTP_OK
     assert resp.json['foo'] == 'bar'
+
+
+def test_stream_response(client):
+    here = os.path.dirname(os.path.realpath(__file__))
+    filepath = os.path.join(here, 'image.jpg')
+
+    class Resource:
+        def on_get(self, req, resp, **kwargs):
+            image = open(filepath, 'rb')
+            resp.stream = image
+            resp.stream_len = os.path.getsize(filepath)
+            resp.content_type = 'image/jpeg'
+
+    application.add_route('/route', Resource())
+
+    resp = client.get('/route')
+    assert resp.status == falcon.HTTP_OK
+    assert resp.headers['content-length'] == '25919'
+    img = open(filepath, 'rb')
+    assert img.read() == resp.body
 
 
 def test_empty_response_with_json_content_type_should_not_fail(client):
