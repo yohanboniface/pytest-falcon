@@ -137,7 +137,7 @@ class Client(object):
             # …to be smart and provide the response as str if it let iself
             # decode.
             resp.body = resp.body.decode()
-        except (UnicodeDecodeError, AttributeError):
+        except UnicodeDecodeError:
             # But do not insist.
             pass
         if 'application/json' in resp.headers.get('Content-Type', ''):
