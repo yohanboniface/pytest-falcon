@@ -132,10 +132,7 @@ class Client(object):
         body = self.app(create_environ(path, **kwargs), resp)
         resp.headers = resp.headers_dict
         resp.status_code = int(resp.status.split(' ')[0])
-        try:
-            resp.body = body[0] if body else ''
-        except TypeError:
-            resp.body = b''.join(list(body))
+        resp.body = b''.join(list(body)) if body else ''
         try:
             # …to be smart and provide the response as str if it let iself
             # decode.
