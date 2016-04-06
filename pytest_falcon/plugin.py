@@ -81,11 +81,13 @@ class Client(object):
         body = kwargs.get('body')
         headers = kwargs.get('headers')
         content_type = headers.get('Content-Type')
-        if not body or not content_type or isinstance(body, str):
+        if not content_type or isinstance(body, str):
             return
-        if 'application/x-www-form-urlencoded' in content_type:
+        if not body:
+            kwargs['body'] = ''  # Workaround None or empty dict values.
+        elif 'application/x-www-form-urlencoded' in content_type:
             kwargs['body'] = urlencode(body)
-        if 'multipart/form-data' in content_type:
+        elif 'multipart/form-data' in content_type:
             kwargs['body'], headers['Content-Type'] = encode_multipart(body)
         elif 'application/json' in headers['Content-Type']:
             kwargs['body'] = json.dumps(body)

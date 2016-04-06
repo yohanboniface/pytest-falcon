@@ -104,6 +104,28 @@ def test_post_with_json_content_type_shoud_reencode_dict(client):
     assert resp.json['myparam'] == 'myvalue'
 
 
+def test_empty_post_data_should_not_fail(client):
+
+    class Resource:
+
+        def on_post(self, req, resp, **kwargs):
+            resp.body = json.dumps(req.params)
+
+    application.add_route('/route', Resource())
+
+    resp = client.post('/route', {})
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json == {}
+
+    resp = client.post('/route', None)
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json == {}
+
+    resp = client.post('/route')
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json == {}
+
+
 def test_put(client):
 
     class Resource:

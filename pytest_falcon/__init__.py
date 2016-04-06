@@ -1,5 +1,5 @@
 "Pytest helpers for Falcon."
-VERSION = (0, 3, 2)
+VERSION = (0, 3, 3)
 
 __author__ = 'Yohan Boniface'
 __contact__ = "yohan.boniface@data.gouv.fr"
