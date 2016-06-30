@@ -5,6 +5,7 @@ import falcon
 import pytest
 
 application = falcon.API()
+application.req_options.auto_parse_form_urlencoded = True
 
 
 @pytest.fixture
