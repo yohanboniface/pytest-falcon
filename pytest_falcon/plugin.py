@@ -69,6 +69,8 @@ def encode_multipart(data, charset='utf-8'):
 
 class Client(object):
 
+    content_type = None
+
     def __init__(self, app, **kwargs):
         self.app = app
         self._before = kwargs.get('before')
@@ -81,11 +83,16 @@ class Client(object):
         body = kwargs.get('body')
         headers = kwargs.get('headers')
         content_type = headers.get('Content-Type')
-        if not content_type or isinstance(body, str):
-            return
         if not body:
             kwargs['body'] = ''  # Workaround None or empty dict values.
-        elif 'application/x-www-form-urlencoded' in content_type:
+        if not body or isinstance(body, str):
+            return
+        if not content_type:
+            if self.content_type:
+                headers['Content-Type'] = content_type = self.content_type
+            else:
+                return
+        if 'application/x-www-form-urlencoded' in content_type:
             kwargs['body'] = urlencode(body)
         elif 'multipart/form-data' in content_type:
             kwargs['body'], headers['Content-Type'] = encode_multipart(body)
@@ -154,10 +161,7 @@ class Client(object):
     def post(self, path, data=None, **kwargs):
         kwargs.setdefault('headers', {})
         kwargs.setdefault('body', data or {})
-        headers = kwargs['headers']
         self.handle_files(kwargs)
-        if 'Content-Type' not in headers:
-            headers['Content-Type'] = 'application/x-www-form-urlencoded'
         return self.fake_request(path, method='POST', **kwargs)
 
     def put(self, path, body, **kwargs):

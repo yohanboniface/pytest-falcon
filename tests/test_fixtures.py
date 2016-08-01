@@ -70,7 +70,8 @@ def test_post(client):
 
     application.add_route('/route', Resource())
 
-    resp = client.post('/route', {'myparam': 'myvalue'})
+    resp = client.post('/route', {'myparam': 'myvalue'},
+                       content_type='application/x-www-form-urlencoded')
     assert resp.status == falcon.HTTP_OK
     assert resp.json['myparam'] == 'myvalue'
 
@@ -206,6 +207,21 @@ def test_non_json_content_type(client):
     application.add_route('/route', Resource())
     resp = client.get('/route')
     assert resp.body == '<html></html>'
+
+
+def test_content_type_can_be_set_at_client_level(client):
+
+    class Resource:
+
+        def on_post(self, req, resp, **kwargs):
+            resp.body = json.dumps(req.params)
+
+    application.add_route('/route', Resource())
+
+    client.content_type = 'application/x-www-form-urlencoded'
+    resp = client.post('/route', {'myparam': 'myvalue'})
+    assert resp.status == falcon.HTTP_OK
+    assert resp.json['myparam'] == 'myvalue'
 
 
 def test_before_as_parameter(client):
