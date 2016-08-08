@@ -69,7 +69,7 @@ def encode_multipart(data, charset='utf-8'):
 
 class Client(object):
 
-    content_type = None
+    content_type = 'application/x-www-form-urlencoded'
 
     def __init__(self, app, **kwargs):
         self.app = app
