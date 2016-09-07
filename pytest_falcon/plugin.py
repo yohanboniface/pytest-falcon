@@ -138,7 +138,9 @@ class Client(object):
             kwargs['query_string'] = urlencode(kwargs['query_string'])
         self.encode_body(kwargs)
         resp = StartResponseMock()
-        body = self.app(create_environ(path, **kwargs), resp)
+        environ = create_environ(path, **kwargs)
+        resp.environ = environ
+        body = self.app(environ, resp)
         resp.headers = resp.headers_dict
         resp.status_code = int(resp.status.split(' ')[0])
         resp.body = b''.join(list(body)) if body else b''
