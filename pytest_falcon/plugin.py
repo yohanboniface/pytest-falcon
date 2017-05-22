@@ -160,6 +160,9 @@ class Client(object):
     def get(self, path, **kwargs):
         return self.fake_request(path, method='GET', **kwargs)
 
+    def head(self, path, **kwargs):
+        return self.fake_request(path, method='HEAD', **kwargs)
+
     def post(self, path, data=None, **kwargs):
         kwargs.setdefault('headers', {})
         kwargs.setdefault('body', data or {})

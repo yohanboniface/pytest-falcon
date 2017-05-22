@@ -27,6 +27,20 @@ def test_get(client):
     assert resp.json['foo'] == 'bar'
 
 
+def test_head(client):
+
+    class Resource:
+
+        def on_head(self, req, resp, **kwargs):
+            resp.set_header("foo", "bar")
+
+    application.add_route('/route', Resource())
+
+    resp = client.head('/route')
+    assert resp.status == falcon.HTTP_OK
+    assert resp.headers['foo'] == 'bar'
+
+
 def test_stream_response(client):
     here = os.path.dirname(os.path.realpath(__file__))
     filepath = os.path.join(here, 'image.jpg')
