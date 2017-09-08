@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
-
-from io import BytesIO
 import json
 import mimetypes
+from io import BytesIO
 from uuid import uuid4
 
 import pytest
