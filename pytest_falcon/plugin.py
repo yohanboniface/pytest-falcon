@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
-
-from io import BytesIO
 import json
 import mimetypes
+from io import BytesIO
 from uuid import uuid4
 
 import pytest
@@ -141,9 +140,16 @@ class Client(object):
         environ = create_environ(path, **kwargs)
         resp.environ = environ
         body = self.app(environ, resp)
+        if body:
+            body = b''.join(
+                part.encode() if not isinstance(part, bytes) else part
+                for part in body
+                )
+        else:
+            body = b''
         resp.headers = resp.headers_dict
         resp.status_code = int(resp.status.split(' ')[0])
-        resp.body = b''.join(list(body)) if body else b''
+        resp.body = body
         try:
             # …to be smart and provide the response as str if it let iself
             # decode.

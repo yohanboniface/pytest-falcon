@@ -1,1 +1,8 @@
+# falcon multipart
 git+https://github.com/yohanboniface/falcon-multipart
+
+# tests
+pytest-cov
+pytest-flake8
+pytest-isort
+tox

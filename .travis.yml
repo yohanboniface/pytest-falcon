@@ -1,24 +1,58 @@
 sudo: false
 language: python
 python:
-- '2.7'
-- '3.4'
-- '3.5'
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.6-dev"
+  - "3.7"
+  - "3.7-dev"
+  - "nightly"
+
+env:
+  global:
+    - WORKON_HOME=/home/travis/.virtualenvs
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - python: "3.6-dev"
+    - python: "3.7"
+    - python: "3.7-dev"
+    - python: "nightly"
+
 cache:
   directories:
   - "$HOME/.cache/pip"
+
 install:
-- pip install -r requirements.txt
-- pip install -r requirements-dev.txt
-- python setup.py develop
-script: py.test
+  # debugging info
+  - git --version
+
+  # installation of tox integration for travis
+  - pip install tox-travis
+
+  # installation of package
+  - pip install -r requirements-dev.txt
+  - pip install -r requirements.txt
+  - pip install -e .
+
+  # More debugging info .
+  - pip freeze
+
+script:
+  - tox --travis-after
+
 notifications:
   irc:
     channels:
-    - irc.freenode.net##ban
+      - irc.freenode.net##ban
     on_success: change
     on_failure: always
   email: false
+
 deploy:
   provider: pypi
   distributions: "sdist bdist_wheel"
@@ -27,4 +61,5 @@ deploy:
     secure: hI3aBXJNmvy96wvHXW1oDzp053s6nDHmhFSUMbLuxdcZDPbbwVkThn8SQXNdVi3d+qb0LFwYFKW7wyPH0UKBWZ9xGITIUy9dMh+9YOyb6uygQJ4Zylze7KFjCNI/iIoEY8o8cprCSEOLMyJtazndNwH3F1pEbOC9mM/9iZXzf+3hX4UfSGNyvVTA9HzcC+jViV0fr4G1wANoIeXuZ/KaOpejGWuHUGRhouDRlu/ouiCuhr6JvExB31bNth6FVaCOURqy+Sms8GAKCYeid3Td88wXIyapgRsR3TdkcYiKDpIVY7bkqjlUEFh6fK1ByDn112kad/Qmv8zQNEsuqvv41j5L+CciEN5hs2gW3OwhyWSbNpd6QmVeFOS76l6NCS8hkUrYPeJ+s4ELrFj81MPorIIQgvU7zj86HOq8ENpdjdp2Uyed9E2JBbdUYCP7HJODr/9uU/YJmxVJgSh8RqNoF5IwVkmnY7EC0saigz1j+yGEuxixi9byY5/BNRfteQj9+wd/xqpR+wneUC9JIfR4hBISH6w4VzZvY4vOLR1Xv0gSBcTwgsqGU0OJEric/iP2wnWPVeyS+hPWybCGKZufae+jPG0gVx3F1XKaDOp4YSQF1zG1lR0G/OBMIVH5us+f1InhdPzNZCyiwX2mwHfe8KgadeYb4eaACwuyIoCDOk4=
   on:
     tags: true
+    python: 3.6
     repo: yohanboniface/pytest-falcon

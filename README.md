@@ -56,3 +56,46 @@ Response properties:
 - `headers` the response headers
 - `status` the response status, as `str` ('200 OK', '405 Method Not Allowed'…)
 - `status_code` the response status code, as `int` (200, 201…)
+
+
+## Contributing
+
+As a general rule, please make sure any changes pass all tests and that
+any new contribution which fixes a bug or provides a new feature
+also has a new test paired with it.  The tests are all found under the
+`tests` folder.
+
+Additionally, there is an optional dependency on `falcon_multipart` and
+tests to check for compatibility with that package.  This package can
+be checked out within the github repo under:
+
+    https://github.com/yohanboniface/falcon-multipart
+
+Additionally, the optional dependency is included within
+`requirements-dev.txt`.  To install locally, run:
+
+    $ pip -r requirements-dev.txt
+
+
+### Style
+
+Pytest-falcon uses `isort` and `flake8` to manage style within this
+project.  There are tests that will fail if these styles are violated.
+
+
+### Testing Pytest-Falcon
+
+Pytest-Falcon testing is supported by `tox` and `tox` is integrated into
+travis.
+
+The expected mechanism for running a test is to simply run `pytest`
+within a `virtualenv`:
+
+    $ pip install -r requirements-dev.txt
+    $ pytest
+
+
+A safer, more robust way of testing is to use `tox`:
+
+    $ pip install -r requirements-dev.txt
+    $ tox

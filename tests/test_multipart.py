@@ -1,5 +1,5 @@
-from io import BytesIO
 import os
+from io import BytesIO
 
 import falcon
 import pytest
@@ -24,7 +24,7 @@ def app():
     ('filecontent', 'afile.txt'),
     (b'filecontent', 'afile.txt'),
     (BytesIO(b'filecontent'), 'afile.txt'),
-])
+    ])
 def test_should_handle_files_kwarg_on_post(client, params):
 
     class Resource:

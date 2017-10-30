@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 import falcon
 import pytest
@@ -13,18 +13,37 @@ def app():
     return application
 
 
-def test_get(client):
+@pytest.mark.parametrize('expected', [
+    '',
+    {},
+    {'foo': 'bar'},
+    [
+        {
+            "id": 0,
+            "name": "Unknown",
+            "description": "NA"
+            },
+        {
+            "id": 1,
+            "name": "Another",
+            "description": "Dunno"
+            }
+        ],
+    ])
+def test_get(client, expected):
+
+    response_body = json.dumps(expected)
 
     class Resource:
 
         def on_get(self, req, resp, **kwargs):
-            resp.body = '{"foo": "bar"}'
+            resp.body = response_body
 
     application.add_route('/route', Resource())
 
     resp = client.get('/route')
     assert resp.status == falcon.HTTP_OK
-    assert resp.json['foo'] == 'bar'
+    assert resp.json == expected
 
 
 def test_head(client):
